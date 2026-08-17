@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Richard Haynes — Senior Software Engineer</title>
+<meta name="description" content="Richard Haynes — Senior Software Engineer. Event-driven systems, AI integration, and the judgment layer above automation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1220;
+    --bg-panel:#101A2E;
+    --bg-panel-2:#0D1626;
+    --text:#ECE6D6;
+    --text-dim:#8FA0BA;
+    --text-dim-2:#5B6B85;
+    --accent:#C9A227;
+    --accent-soft:rgba(201,162,39,0.14);
+    --accent-2:#5B87B0;
+    --line:#22304A;
+    --serif:'Fraunces', Georgia, serif;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono:'IBM Plex Mono', 'SF Mono', Menlo, monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 32px;}
+
+  /* subtle grid texture */
+  .grid-bg{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:0.12;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  }
+
+  header{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter:blur(10px);
+    background:rgba(11,18,32,0.82);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 0;
+  }
+  .logo{
+    font-family:var(--mono); font-size:14px; letter-spacing:0.02em;
+    color:var(--text);
+  }
+  .logo span{color:var(--accent);}
+  .navlinks{display:flex; gap:28px; font-size:14px; color:var(--text-dim);}
+  .navlinks a{text-decoration:none; transition:color .2s;}
+  .navlinks a:hover{color:var(--accent);}
+
+  /* HERO */
+  .hero{
+    position:relative; z-index:1;
+    padding:96px 0 72px;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--accent);
+    display:flex; align-items:center; gap:10px; margin-bottom:22px;
+  }
+  .eyebrow::before{
+    content:''; width:7px; height:7px; border-radius:50%;
+    background:var(--accent); box-shadow:0 0 0 4px var(--accent-soft);
+  }
+  h1{
+    font-family:var(--serif); font-weight:500;
+    font-size:clamp(40px, 6vw, 72px);
+    line-height:1.05; letter-spacing:-0.01em;
+    max-width:14ch;
+  }
+  .role{
+    font-family:var(--serif); font-style:italic; font-weight:400;
+    font-size:clamp(18px, 2.2vw, 24px);
+    color:var(--text-dim); margin-top:18px; max-width:38ch;
+  }
+  .hero-desc{
+    margin-top:24px; color:var(--text-dim); max-width:52ch; font-size:16px;
+  }
+  .hero-cta{
+    margin-top:36px; display:flex; gap:14px; flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--mono); font-size:13px;
+    padding:12px 20px; border-radius:2px;
+    text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+    transition:all .2s; border:1px solid var(--line);
+  }
+  .btn-primary{background:var(--accent); color:#0B1220; border-color:var(--accent); font-weight:500;}
+  .btn-primary:hover{background:#E0B830;}
+  .btn-ghost{color:var(--text); }
+  .btn-ghost:hover{border-color:var(--accent); color:var(--accent);}
+
+  /* LOG STREAM — signature element */
+  .stream-panel{
+    margin-top:64px;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .stream-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 16px; border-bottom:1px solid var(--line);
+    font-family:var(--mono); font-size:12px; color:var(--text-dim-2);
+  }
+  .stream-dots{display:flex; gap:6px;}
+  .stream-dots span{width:9px; height:9px; border-radius:50%; background:var(--line);}
+  .stream-body{
+    height:220px; overflow:hidden; position:relative;
+    font-family:var(--mono); font-size:13px;
+  }
+  .stream-track{
+    position:absolute; width:100%;
+    animation:scrollLog 28s linear infinite;
+  }
+  .stream-track div{padding:6px 16px; white-space:nowrap; color:var(--text-dim);}
+  .stream-track .k{color:var(--accent-2);}
+  .stream-track .v{color:var(--accent);}
+  .stream-track .msg{color:var(--text);}
+  @keyframes scrollLog{
+    0%{transform:translateY(0);}
+    100%{transform:translateY(-50%);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .stream-track{animation:none;}
+  }
+
+  /* SECTIONS */
+  section{
+    position:relative; z-index:1;
+    padding:80px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .section-head{margin-bottom:44px;}
+  .section-num{
+    font-family:var(--mono); font-size:12px; color:var(--accent);
+    letter-spacing:0.1em; text-transform:uppercase;
+  }
+  .section-title{
+    font-family:var(--serif); font-weight:500; font-size:clamp(26px,3.4vw,36px);
+    margin-top:10px;
+  }
+  .section-sub{color:var(--text-dim); margin-top:12px; max-width:60ch;}
+
+  /* ABOUT */
+  .about-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:56px;}
+  .about-body p{color:var(--text-dim); margin-bottom:18px; font-size:16px;}
+  .about-body strong{color:var(--text); font-weight:500;}
+  .facts{border-left:1px solid var(--line); padding-left:28px; display:flex; flex-direction:column; gap:22px;}
+  .fact-label{font-family:var(--mono); font-size:11px; color:var(--text-dim-2); text-transform:uppercase; letter-spacing:0.08em;}
+  .fact-val{font-size:15px; margin-top:4px;}
+
+  /* SKILLS */
+  .skill-cols{display:grid; grid-template-columns:repeat(2,1fr); gap:40px 56px;}
+  .skill-group{border-top:1px solid var(--line); padding-top:20px;}
+  .skill-group h3{
+    font-family:var(--mono); font-size:13px; color:var(--accent);
+    text-transform:uppercase; letter-spacing:0.06em; margin-bottom:14px;
+  }
+  .skill-tags{display:flex; flex-wrap:wrap; gap:8px;}
+  .skill-tags span{
+    font-size:13px; padding:6px 12px; border:1px solid var(--line);
+    border-radius:2px; color:var(--text-dim);
+  }
+
+  /* PROJECTS */
+  .proj-list{display:flex; flex-direction:column;}
+  .proj{
+    display:grid; grid-template-columns:1fr 2.2fr; gap:32px;
+    padding:32px 0; border-top:1px solid var(--line);
+  }
+  .proj:last-child{border-bottom:none;}
+  .proj-meta{font-family:var(--mono); font-size:12px; color:var(--text-dim-2);}
+  .proj-title{
+    font-family:var(--serif); font-size:22px; font-weight:500; margin-bottom:10px; color:var(--text);
+  }
+  .proj-desc{color:var(--text-dim); font-size:15px; margin-bottom:14px;}
+  .proj-tags{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;}
+  .proj-tags span{font-family:var(--mono); font-size:11px; color:var(--accent-2);}
+  .proj-tags span::after{content:'/'; margin-left:8px; color:var(--line);}
+  .proj-tags span:last-child::after{content:'';}
+  .proj-link{font-family:var(--mono); font-size:13px; color:var(--accent); text-decoration:none;}
+  .proj-link:hover{text-decoration:underline;}
+
+  /* CERTS */
+  .cert-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:18px 0; border-top:1px solid var(--line);
+    font-size:15px;
+  }
+  .cert-row:last-child{border-bottom:1px solid var(--line);}
+  .cert-name{color:var(--text);}
+  .cert-year{font-family:var(--mono); font-size:12px; color:var(--text-dim-2);}
+
+  /* CONTACT */
+  .contact{border-bottom:none;}
+  .contact-inner{
+    display:flex; flex-direction:column; align-items:flex-start; gap:28px;
+  }
+  .contact-title{
+    font-family:var(--serif); font-weight:500; font-size:clamp(32px,4.4vw,48px);
+    max-width:16ch;
+  }
+  .contact-links{display:flex; gap:16px; flex-wrap:wrap;}
+
+  footer{
+    padding:32px 0; text-align:center;
+    font-family:var(--mono); font-size:12px; color:var(--text-dim-2);
+  }
+
+  /* reveal on scroll */
+  .reveal{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  @media (max-width:760px){
+    .about-grid, .skill-cols{grid-template-columns:1fr;}
+    .proj{grid-template-columns:1fr; gap:12px;}
+    .navlinks{display:none;}
+    .wrap{padding:0 20px;}
+    .facts{border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:20px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<header>
+  <nav class="wrap">
+    <div class="logo">rh<span>/</span>dev</div>
+    <div class="navlinks">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#certs">Certifications</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Available for staff-level & AppSec roles</div>
+    <h1>Richard Haynes</h1>
+    <p class="role">A philosophical engineer — asking why before how.</p>
+    <p class="hero-desc">
+      Senior Software Engineer with 10+ years building event-driven systems,
+      RESTful APIs, and — most recently — AI-integrated applications. Cross-domain
+      background spanning backend architecture, cloud, mobile, and security.
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#projects">View projects</a>
+      <a class="btn btn-ghost" href="#contact">Get in touch</a>
+    </div>
+
+    <div class="stream-panel reveal">
+      <div class="stream-head">
+        <span>topic: career-events&nbsp;&nbsp;partition: 0&nbsp;&nbsp;consumer-group: visitors</span>
+        <div class="stream-dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="stream-body">
+        <div class="stream-track" id="logTrack"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-num">01 — About</div>
+      <h2 class="section-title">Systems thinking, applied broadly</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-body reveal">
+        <p>
+          I've spent over a decade moving from support and consulting roles into
+          senior engineering, where I now help set standards as a
+          <strong>Development and Engineering Chair</strong>. My core strength is
+          <strong>event-driven architecture</strong> — designing systems around
+          Kafka, RESTful APIs, and .NET/C# that stay maintainable as they scale.
+        </p>
+        <p>
+          Lately that's extended into <strong>AI-integrated systems</strong>:
+          retrieval-augmented search with pgvector, local inference with Ollama,
+          and thinking seriously about where automation is resilient versus
+          where it's brittle. I care less about being first to a new framework
+          and more about understanding <em>why</em> a system is built the way it is —
+          which is usually the difference between code that works today and
+          architecture that survives five years of change.
+        </p>
+        <p>
+          Outside the backend, I build for iOS — three published App Store apps,
+          with SwiftUI and SwiftData work spanning offline-first persistence,
+          testing, and app security. I hold a Google Cybersecurity certificate
+          and I'm actively building toward AppSec and staff-level engineering.
+        </p>
+      </div>
+      <div class="facts reveal">
+        <div>
+          <div class="fact-label">Based in</div>
+          <div class="fact-val">Detroit Metro Area, MI</div>
+        </div>
+        <div>
+          <div class="fact-label">Current focus</div>
+          <div class="fact-val">Event-driven systems &amp; AI integration</div>
+        </div>
+        <div>
+          <div class="fact-label">Experience</div>
+          <div class="fact-val">10+ years, backend → staff-track</div>
+        </div>
+        <div>
+          <div class="fact-label">Also building</div>
+          <div class="fact-val">iOS apps (SwiftUI / SwiftData)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-num">02 — Skills</div>
+      <h2 class="section-title">What I actually build with</h2>
+      <p class="section-sub">Grouped by domain, not by resume-keyword density.</p>
+    </div>
+    <div class="skill-cols">
+      <div class="skill-group reveal">
+        <h3>Backend &amp; Systems</h3>
+        <div class="skill-tags">
+          <span>.NET / C#</span><span>Kafka</span><span>RESTful APIs</span>
+          <span>Event-Driven Architecture</span><span>Azure</span><span>Microservices</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <h3>AI &amp; Data</h3>
+        <div class="skill-tags">
+          <span>pgvector</span><span>Ollama (local LLM inference)</span>
+          <span>Embeddings &amp; Semantic Search</span><span>RAG patterns</span>
+          <span>Prompt / Agent Tooling</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <h3>Mobile</h3>
+        <div class="skill-tags">
+          <span>Swift</span><span>SwiftUI</span><span>SwiftData</span>
+          <span>iOS App Store shipping</span><span>Testcontainers</span>
+        </div>
+      </div>
+      <div class="skill-group reveal">
+        <h3>Security &amp; Practice</h3>
+        <div class="skill-tags">
+          <span>Google Cybersecurity Cert</span><span>AZ-900</span>
+          <span>AppSec (in progress)</span><span>Code Review &amp; Architecture</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-num">03 — Projects</div>
+      <h2 class="section-title">Selected work</h2>
+      <p class="section-sub">
+        Independently designed, built, and shipped to the App Store — solo,
+        across the full mobile stack.
+      </p>
+    </div>
+    <div class="proj-list">
+      <div class="proj reveal">
+        <div class="proj-meta">APP STORE · SHIPPED</div>
+        <div>
+          <div class="proj-title">Greedy Goblins 2</div>
+          <p class="proj-desc">
+            The sequel — get rid of the goblins before they make off with all
+            your gold coins. A Swift iOS game built for quick, kid-friendly play.
+          </p>
+          <div class="proj-tags">
+            <span>Swift</span><span>iOS</span><span>Game</span>
+          </div>
+          <a class="proj-link" href="https://apps.apple.com/us/app/greedy-goblins2/id6476446860" target="_blank" rel="noopener">View on the App Store →</a>
+        </div>
+      </div>
+
+      <div class="proj reveal">
+        <div class="proj-meta">APP STORE · SHIPPED</div>
+        <div>
+          <div class="proj-title">Greedy Goblins</div>
+          <p class="proj-desc">
+            A simple iOS game for kids — destroy the goblins to keep them away
+            from your coins. The original in the series.
+          </p>
+          <div class="proj-tags">
+            <span>Swift</span><span>iOS</span><span>Game</span>
+          </div>
+          <a class="proj-link" href="https://apps.apple.com/us/app/greedygoblins/id6475239897" target="_blank" rel="noopener">View on the App Store →</a>
+        </div>
+      </div>
+
+      <div class="proj reveal">
+        <div class="proj-meta">APP STORE · SHIPPED</div>
+        <div>
+          <div class="proj-title">LiveOrLunge</div>
+          <p class="proj-desc">
+            Encourages brief exercise between long gaming sessions — set a rep
+            range, get a random count of lunges, and track your workout history
+            over time.
+          </p>
+          <div class="proj-tags">
+            <span>Swift</span><span>iOS</span><span>Fitness</span>
+          </div>
+          <a class="proj-link" href="https://apps.apple.com/us/app/liveorlunge/id1667128432" target="_blank" rel="noopener">View on the App Store →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="certs">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-num">04 — Certifications</div>
+      <h2 class="section-title">Credentials</h2>
+    </div>
+    <div class="reveal">
+      <div class="cert-row">
+        <span class="cert-name">Google Cybersecurity Certificate</span>
+        <span class="cert-year">Google</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Microsoft Azure Fundamentals (AZ-900)</span>
+        <span class="cert-year">Microsoft</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Part 107 Remote Pilot (sUAS)</span>
+        <span class="cert-year">FAA</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap contact-inner reveal">
+    <div>
+      <div class="section-num">05 — Contact</div>
+      <h2 class="contact-title">Let's build something worth the architecture diagram.</h2>
+    </div>
+    <div class="contact-links">
+      <a class="btn btn-primary" href="mailto:your.email@example.com">Email me →</a>
+      <a class="btn btn-ghost" href="https://github.com/rhaynes123" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn btn-ghost" href="#" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © <span id="year"></span> Richard Haynes — built with intent, deployed on Vercel.
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const events = [
+    ['2015', 'ROLE_START', 'role="Support / Consulting"'],
+    ['2017', 'SKILL_ACQUIRED', 'skill=".NET / C#"'],
+    ['2018', 'SKILL_ACQUIRED', 'skill="RESTful API Design"'],
+    ['2019', 'ARCH_SHIFT', 'pattern="Event-Driven Architecture (Kafka)"'],
+    ['2020', 'CERT_EARNED', 'cert="AZ-900"'],
+    ['2021', 'ROLE_PROMOTED', 'role="Senior Software Developer"'],
+    ['2022', 'SIDE_PROJECT', 'shipped="iOS App #1 (Swift)"'],
+    ['2022', 'SIDE_PROJECT', 'shipped="iOS App #2 (Swift)"'],
+    ['2023', 'ROLE_EXPANDED', 'role="Development & Engineering Chair"'],
+    ['2023', 'CERT_EARNED', 'cert="Google Cybersecurity Certificate"'],
+    ['2024', 'SIDE_PROJECT', 'shipped="iOS App #3 (Swift)"'],
+    ['2025', 'SKILL_ACQUIRED', 'skill="pgvector + Ollama (local LLM inference)"'],
+    ['2025', 'PROJECT_BUILT', 'name="RichSnackRackV2"'],
+    ['2026', 'STATUS', 'msg="Targeting staff-level / AppSec. Still asking why."'],
+  ];
+
+  const track = document.getElementById('logTrack');
+  function renderLog(){
+    const rows = events.map(([t,type,rest]) =>
+      `<div><span class="k">[${t}]</span> <span class="v">${type}</span> <span class="msg">${rest}</span></div>`
+    ).join('');
+    track.innerHTML = rows + rows; // duplicate for seamless loop
+  }
+  renderLog();
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
