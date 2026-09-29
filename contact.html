@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Richard Haynes</title>
+<meta name="description" content="Get in touch with Richard Haynes — Senior Software Engineer. Email, LinkedIn, GitHub, phone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<header>
+  <nav class="wrap">
+    <a class="logo" href="index.html">rh<span>/</span>dev</a>
+    <div class="navlinks">
+      <a href="index.html">← Back to profile</a>
+      <a href="index.html#projects">Projects</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Let's talk</div>
+    <h1>Reach out.</h1>
+    <p class="role">Roles, collaborations, or a good architecture debate — all welcome.</p>
+    <p class="hero-desc">
+      I read every message. Fastest response is email; LinkedIn works too
+      for role conversations. Based in the Detroit metro area, open to
+      remote and hybrid.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-num">01 — Direct</div>
+      <h2 class="section-title">Ways to get in touch</h2>
+    </div>
+    <div class="contact-grid">
+      <a class="contact-tile reveal" href="mailto:richqualitydevelopment@gmail.com">
+        <span class="fact-label">Email</span>
+        <span class="tile-val">richqualitydevelopment@gmail.com</span>
+      </a>
+      <a class="contact-tile reveal" href="tel:+13133206262">
+        <span class="fact-label">Phone</span>
+        <span class="tile-val">313-320-6262</span>
+      </a>
+      <a class="contact-tile reveal" href="https://www.linkedin.com/in/richard-haynes-7395586a/" target="_blank" rel="noopener">
+        <span class="fact-label">LinkedIn</span>
+        <span class="tile-val">linkedin.com/in/richard-haynes</span>
+      </a>
+      <a class="contact-tile reveal" href="https://github.com/rhaynes123" target="_blank" rel="noopener">
+        <span class="fact-label">GitHub</span>
+        <span class="tile-val">github.com/rhaynes123</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-num">02 — Where</div>
+      <h2 class="section-title">Based in Detroit</h2>
+      <p class="section-sub">
+        Detroit Metro Area, Michigan · open to remote and hybrid ·
+        available for staff-level and AppSec conversations.
+      </p>
+    </div>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="mailto:richqualitydevelopment@gmail.com">Email me →</a>
+      <a class="btn btn-ghost" href="index.html">← Back to profile</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © <span id="year"></span> Richard Haynes — built with intent, deployed on Vercel.
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
